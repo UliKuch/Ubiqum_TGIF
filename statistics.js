@@ -80,23 +80,60 @@ async function renderTableData(dataObject) {
     };
 
     // calculate average votes with party
+
+    // handle missing values in data object
+    let missingValues = 0;
+
     demAvWithPartyValue = demList.reduce((a, c) => {
-      return a + c.votes_with_party_pct;
-    }, 0) / demList.length;
+      if (c.votes_with_party_pct != undefined && c.votes_with_party_pct != null) {
+        return a + c.votes_with_party_pct;
+      } else {
+        missingValues++;
+        return 0;
+      }
+    }, 0) / (demList.length - missingValues);
+    missingValues = 0;
     repAvWithPartyValue = repList.reduce((a, c) => {
-      return a + c.votes_with_party_pct;
-    }, 0) / repList.length;
+      if (c.votes_with_party_pct != undefined && c.votes_with_party_pct != null) {
+        return a + c.votes_with_party_pct;
+      } else {
+        missingValues++;
+        return 0;
+      }
+    }, 0) / (repList.length - missingValues);
+
 
     // calculate average missed votes
+
+    missingValues = 0;
     demAvMissedVotesValue = demList.reduce((a, c) => {
-      return a + c.missed_votes_pct;
-    }, 0) / demList.length;
+      if (c.missed_votes_pct != undefined && c.missed_votes_pct != null) {
+        return a + c.missed_votes_pct;
+      } else {
+        missingValues++;
+        return 0;
+      }
+    }, 0) / (demList.length - missingValues);
+
+    missingValues = 0;
     repAvMissedVotesValue = repList.reduce((a, c) => {
-      return a + c.missed_votes_pct;
-    }, 0) / repList.length;
+      if (c.missed_votes_pct != undefined && c.missed_votes_pct != null) {
+        return a + c.missed_votes_pct;
+      } else {
+        missingValues++;
+        return 0;
+      }
+    }, 0) / (repList.length - missingValues);
+
+    missingValues = 0;
     indAvMissedVotesValue = indList.reduce((a, c) => {
-      return a + c.missed_votes_pct;
-    }, 0) / indList.length;
+      if (c.missed_votes_pct != undefined && c.missed_votes_pct != null) {
+        return a + c.missed_votes_pct;
+      } else {
+        missingValues++;
+        return 0;
+      }
+    }, 0) / (indList.length - missingValues);
 
     // get top ten percent for different parameters
     missedMostList =  getTopTenPercent("missed_votes_pct", "highest");
