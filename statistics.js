@@ -1,6 +1,6 @@
-// initialize variables, fill them with content in async function
+// initialize variables, fill them with content in renderTableData function
 let data = {};
-let memberlist = [];
+let memberList = [];
 
 let demList = [];
 let repList = [];
@@ -18,20 +18,7 @@ let missedLeastList = [];
 let withPartyMostList = [];
 let withPartyLeastList = [];
 
-let statistics = {
-  demNum: 0,
-  repNum: 0,
-  indNum: 0,
-  demAvWithParty: 0,
-  repAvWithParty: 0,
-  withPartyMost: 0,
-  withPartyLeast: 0,
-  demAvMissedVotes: 0,
-  repAvMissedVotes: 0,
-  indAvMissedVotes: 0,
-  missedMost: 0,
-  missedLeast: 0,
-}
+let statistics = {}
 
 // av. voted with party
 let totalAvWithParty = 0;
@@ -45,8 +32,7 @@ let captionAvMissedVotes =  0;
 
 
 // fetch data from server, store it in variables and initialize some variables and the tables
-async function renderTableData(dataObject) {
-
+function renderTableData(dataObject) {
   let url = dataObject.url;
 
   fetch(url, {
@@ -55,12 +41,14 @@ async function renderTableData(dataObject) {
       // for apiKey see keys.js
       "X-API-Key": apiKey,
     }
-  }).then(response => {
+  })
+  .then(response => {
     if (response.ok) {
       return response.json();
     }
     throw new Error("Request failed!");
-  }, networkError => console.log(networkError.message)).then(jsonResponse => {
+  }, networkError => console.log(networkError.message))
+  .then(jsonResponse => {
 
     // fill variables with content
 
@@ -92,6 +80,7 @@ async function renderTableData(dataObject) {
         return 0;
       }
     }, 0) / (demList.length - missingValues);
+
     missingValues = 0;
     repAvWithPartyValue = repList.reduce((a, c) => {
       if (c.votes_with_party_pct != undefined && c.votes_with_party_pct != null) {
@@ -195,7 +184,6 @@ async function renderTableData(dataObject) {
 
 // function to calculate the top 10 percent with a given value
 function getTopTenPercent(property, order) {
-
   // remove members who did not have to vote (total_votes === 0 or null)
   let memberListOnlyAttendees = [];
   for (let i = 0; i < memberList.length; i++) {
@@ -254,7 +242,6 @@ function createOverviewTable(matchColumnThree, captionColumnThree) {
   let tableHeadNode = document.createElement("thead");
   let tableHeadRowNode = document.createElement("tr");
   const tableHeadCaptions = ["Party", "No. of Reps", captionColumnThree];
-
 
   // add data to head row
   for (let i = 0; i < tableHeadCaptions.length; i++) {
@@ -316,7 +303,6 @@ function createOverviewTable(matchColumnThree, captionColumnThree) {
 
 
 function createRankingTable(tableID, attOrLoy, topTenList) {
-
   // error handling
   if (!document.getElementById(tableID)) {
     console.log("Table ID not found");
@@ -354,7 +340,6 @@ function createRankingTable(tableID, attOrLoy, topTenList) {
 
   // create table body
   let tableBodyNode = document.createElement("tbody");
-
 
   // add data to table body
   // create rows
@@ -409,3 +394,5 @@ function createRankingTable(tableID, attOrLoy, topTenList) {
   // add body to table
   tableRanking.appendChild(tableBodyNode);
 };
+
+// TODO: see bottom of overview.js

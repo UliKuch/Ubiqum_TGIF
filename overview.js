@@ -17,7 +17,7 @@ let filtersArr = [];
 
 
 // fetch data from server, store it in variables and initialize table
-async function renderTableData(dataObject) {
+function renderTableData(dataObject) {
 
   let url = dataObject.url;
 
@@ -27,12 +27,14 @@ async function renderTableData(dataObject) {
       // for apiKey see keys.js
       "X-API-Key": apiKey,
     }
-  }).then(response => {
+  })
+  .then(response => {
     if (response.ok) {
       return response.json();
     }
     throw new Error("Request failed!");
-  }, networkError => console.log(networkError.message)).then(jsonResponse => {
+  }, networkError => console.log(networkError.message))
+  .then(jsonResponse => {
     data = jsonResponse;
     memberList = data.results[0].members;
 
@@ -202,3 +204,14 @@ function filterByState() {
 
   createMemberTable(filtersArr, selectedStateFilter);
 };
+
+
+// Optional TODOs for more elegant code (for both js files)
+
+// TODO: do not store variables in global name space,
+    // but only in renderTableData and pass them into functions if necessary
+// TODO: do not fill variables in .then part after fetch,
+    // but use a function or functions for that
+// TODO: do not make filter functions call createMemberTable, but return a value.
+    // the event listeners can call createMemberTable, which in turn calls the filter functions
+// TODO: only use one fetch statement for both files
